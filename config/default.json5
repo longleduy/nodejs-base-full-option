@@ -1,0 +1,8 @@
+{
+  logger: {
+    debug_log_path: 'src/logs/debug.log',
+    error_log_path: 'src/logs/error.log',
+    log_service_name: 'nodejs-base-full-option',
+    aws_log_type: 'EC2'
+  }
+}
