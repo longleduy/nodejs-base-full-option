@@ -1,10 +1,11 @@
+import {Response} from 'express';
 // Decorators
 import {Controller} from "../utils/decorators/Controller.decorator";
 import {Get} from "../utils/decorators/Get.decorator";
 import {LogDecorator} from '../utils/decorators/RequestLogging.decorator';
 import {Authenticate} from '../utils/decorators/Authentication.decorator';
 // Utils
-
+import PostgresUtil from '../utils/Postgres.util';
 // Constans
 import {prefixConstant, apiPath} from '../constants/index';
 // Models
@@ -17,8 +18,14 @@ export default class SearchController {
   @Get('')
   @Authenticate
   @LogDecorator
-  public async search(req: ISearchQuery): Promise<JsonResponse> {
+  public async search(req: ISearchQuery,res:Response): Promise<JsonResponse> {
     const data = await userModel.findOne({userName:req.query.userName || ''});
     return new JsonResponse(data?[data]: null);
+  }
+  @Get('/postgres')
+  @LogDecorator
+  public async searchPostgres(req: ISearchQuery): Promise<JsonResponse> {
+    const data = await PostgresUtil.pool.query('SELECT * FROM USERS');
+    return new JsonResponse(data?[data.rows]: null);
   }
 }

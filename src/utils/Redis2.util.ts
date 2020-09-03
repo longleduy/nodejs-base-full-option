@@ -24,7 +24,6 @@ class RedisUtil {
   RedisStore: redisConnect.RedisStore;
   redisSession: express.RequestHandler;
   constructor() {
-    LoggerUtil.logger.info("Redis Session create!");
     this.connect();
     // @ts-ignore
     this.client = PromiseBlubird.promisifyAll(this.clientSync);
@@ -37,9 +36,10 @@ class RedisUtil {
       store: new this.RedisStore({client: this.clientSync }),
       cookie: {}
     });
+    LoggerUtil.logger.info("Redis Session create!");
   }
 
-  private connect() {
+  public connect() {
     if(process.env.REDIS_CLUSTER as string === "1"){
       const listRedisNode: any[] = JSON.parse(process.env.REDIS_CLUSTER_NODE as string);
       LoggerUtil.logger.info(listRedisNode);

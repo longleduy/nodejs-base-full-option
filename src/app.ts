@@ -12,6 +12,7 @@ import LoggerUtil from './utils/Logger.util';
 import OtherUtil from './utils/Other.util';
 import MongoUtil from './utils/Mongo.util';
 import RedisUtil from './utils/Redis2.util';
+import PostgresUtil from './utils/Postgres.util';
 // Models
 import JsonRespone from './models/Response.model';
 // Constants
@@ -24,6 +25,7 @@ class App {
     this.config();
     this.initRoutes();
     MongoUtil.connect();
+    //PostgresUtil.connect();
   }
 
   private config(): void {

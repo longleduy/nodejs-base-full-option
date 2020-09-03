@@ -7,6 +7,9 @@ const GRPC_CREATED = 'GRPC client created!';
 const MONGOOSE_CONECTED = 'MongoDB connected!';
 const MONGOOSE_CONNECTING = 'MongoDB connecting...';
 const MONGOOSE_RECONECT = 'MongoDB Reconnecting...';
+const POSTGRES_CONNECTING = `PostgresDB connecting...`;
+const POSTGRES_ERROR = `PostgresDB connect error: `;
+const POSTGRES_CONNECTED = `PostgresDB connected!`;
 //LOG
 const PROCESS_TOTAL_TIME = `PROCESS @1 Total time: @2ms`;
 // ERROR
@@ -31,5 +34,8 @@ export default {
   MONGOOSE_CONNECTING,
   MONGOOSE_RECONECT,
   ERROR_MSG,
+  POSTGRES_CONNECTING,
+  POSTGRES_ERROR,
+  POSTGRES_CONNECTED,
   getMsg
 }

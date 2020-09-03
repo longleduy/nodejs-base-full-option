@@ -8,7 +8,6 @@ class LoggerUtil {
   loggerConfig: any = config.get('logger');
   constructor() {
     this.init();
-    this.logger.info(`Logger created!`);
   }
   private init():  void{
     const { combine, timestamp,printf } = winston.format;
