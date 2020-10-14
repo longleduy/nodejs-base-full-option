@@ -1,9 +1,13 @@
-import mongoose from 'mongoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
 
-const userSchema = new mongoose.Schema({
-  userName: {type: String,unique: true, required: true},
-  passWord: {type: String},
-  profileName: {type: String},
-  active: {type: Boolean,default: false}
-});
-export const userModel = mongoose.model('users',userSchema);
+class User {
+  @prop({required: true, unique: true})
+  userName?: string;
+  @prop()
+  passWord?: string;
+  @prop()
+  profileName?: string;
+  @prop({default: false})
+  active?: boolean;
+}
+export const UserModel = getModelForClass(User);

@@ -4,7 +4,7 @@ import {LogDecorator} from "../utils/decorators/RequestLogging.decorator";
 import {Controller} from "../utils/decorators/Controller.decorator";
 import SecureUtil from '../utils/Secure.util';
 //Models
-import {userModel} from "../models/mongooese/User.model";
+import {UserModel} from "../models/mongooese/User.model";
 import {ISignInBody} from "../models/ISignIn.body";
 import JsonResponse from "../models/Response.model";
 import Payload from '../models/Payload.model';
@@ -19,7 +19,7 @@ export  default class UserController {
   @LogDecorator
   public async signIn(req: ISignInBody): Promise<JsonResponse> {
     const signInInfo: {userName: string, passWord: string} = {...req.body};
-    const data: any = await userModel.findOne(signInInfo);
+    const data: any = await UserModel.findOne(signInInfo);
     const signInData: SignIn = new SignIn('');
     if(data){
       const payload: Payload = new Payload(data.userName,data.profileName);

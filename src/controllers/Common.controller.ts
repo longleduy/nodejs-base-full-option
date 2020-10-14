@@ -8,7 +8,8 @@ import RedisUtil from '../utils/Redis2.util';
 import {prefixConstant, apiPath} from '../constants/index';
 // Models
 import JsonResponse from "../models/Response.model";
-import {userModel} from '../models/mongooese/User.model';
+import {Post} from "../utils/decorators/Post.decorator";
+import {copyMeetingData, IMeetingBody, IMeetingData} from "../models/IMeeting.model";
 
 @Controller(prefixConstant.INDEX)
 export default class CommonController {
@@ -23,5 +24,14 @@ export default class CommonController {
   public async pingRedisTimeOut(): Promise<JsonResponse> {
     const data = await RedisUtil.redisRequest('ping');
     return new JsonResponse([{status: data}]);
+  }
+  @Post('/meeting')
+  @LogDecorator
+  public async updateMeeting(req: IMeetingBody): Promise<JsonResponse> {
+    const updateData: IMeetingData = {...req.body};
+    const updateData2: IMeetingData = copyMeetingData({...req.body});
+    console.log("updateData", updateData);
+    console.log("updateData2", updateData2);
+    return new JsonResponse([{status: {}}]);
   }
 }

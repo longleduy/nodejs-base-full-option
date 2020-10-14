@@ -11,7 +11,7 @@ import AuthenticationError from "./errors/AuthenticationError.error";
 
 dotenv.config();
 class SecureUtil {
-  public generateToken(payload: Payload): string{
+  public generateToken = (payload: Payload): string => {
     const payloadObj: object = {...payload};
     return jwt.sign(payloadObj,process.env.JWT_SECRET_KEY as string,{expiresIn: process.env.JWT_EXPIRE_TIME});
   }

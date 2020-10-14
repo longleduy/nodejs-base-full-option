@@ -11,7 +11,7 @@ import {prefixConstant, apiPath} from '../constants/index';
 // Models
 import JsonResponse from "../models/Response.model";
 import {ISearchQuery} from '../models/ISearch.query';
-import {userModel} from '../models/mongooese/User.model';
+import {UserModel} from '../models/mongooese/User.model';
 
 @Controller(prefixConstant.SEARCH)
 export default class SearchController {
@@ -19,7 +19,7 @@ export default class SearchController {
   @Authenticate
   @LogDecorator
   public async search(req: ISearchQuery,res:Response): Promise<JsonResponse> {
-    const data = await userModel.findOne({userName:req.query.userName || ''});
+    const data = await UserModel.findOne({userName:req.query.userName || ''});
     return new JsonResponse(data?[data]: null);
   }
   @Get('/postgres')

@@ -1,14 +1,19 @@
 import mongoose from 'mongoose';
+import mongoConnect from 'connect-mongo';
+import session from "express-session";
+import express from "express";
 //Utils
 import LoggerUtil from './Logger.util';
 //Constants
 import {msgConstant} from '../constants/index';
 
+
+
 class MongoUtil{
-  constructor() {
-  }
+  mongoSession!: express.RequestHandler;
   public connect(): void{
     try {
+      const MongoStore = mongoConnect(session);
       LoggerUtil.logger.info(msgConstant.MONGOOSE_CONNECTING);
       mongoose.set('useCreateIndex', true);
       mongoose.set('useFindAndModify', false);
@@ -30,6 +35,12 @@ class MongoUtil{
           this.connect();
         }, 2000);
       }) ;
+      this.mongoSession = session({
+        secret: process.env.MONGO_SESSION_SECRET as string,
+        resave: false,
+        saveUninitialized: true,
+        store: new MongoStore({ mongooseConnection: mongoose.connection })
+      })
     } catch (error) {
       LoggerUtil.logger.error(error.stack);
     }

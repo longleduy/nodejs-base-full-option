@@ -22,9 +22,9 @@ class App {
   public app: express.Application;
   constructor() {
     this.app = express();
+    MongoUtil.connect();
     this.config();
     this.initRoutes();
-    MongoUtil.connect();
     //PostgresUtil.connect();
   }
 
@@ -38,7 +38,8 @@ class App {
       credentials:process.env.NODE_ENV === 'production',
       methods:['POST','GET']
     }));
-    this.app.use(RedisUtil.redisSession);
+    //this.app.use(RedisUtil.redisSession);
+    this.app.use(MongoUtil.mongoSession);
   }
 
   private initRoutes(): void {
