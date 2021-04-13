@@ -1,33 +1,33 @@
-import {apiConstant} from '../constants';
+import {Paging} from "./Paging.model";
 
-export default class JsonResponse {
-  public status_code: number = apiConstant.DEFAULT_STATUS_CODE;
-  public data: any;
-  public response_code?: number;
-  public respone_msg?: string | null;
-  public total_count?: number;
-  public page?: number;
-  public limit?: number;
+interface Option<T>{
+  status?: number
+  data?: T
+  paging?: Paging
+  message?: string
+}
+export default class JsonResponse<T>{
+  status = 200;
+  data?: T
+  message?: string
+  paging?: Paging
 
-  constructor(data: any, status_code?: number, respone_msg?: string, response_code?: number) {
-    this.status_code = status_code || 200;
-    this.respone_msg = respone_msg;
-    this.response_code = response_code;
-    this.data = data;
+  constructor(option?: Option<T>) {
+    this.data = option?.data;
+    this.message = option?.message;
+    this.paging = option?.paging;
+    this.status = option?.status || 200;
   }
 
   public getStatusCode(): number {
-    return this.status_code;
+    return this.status;
   }
 
   public getData(): object {
     return {
-      respone_code: this.response_code,
-      respone_msg: this.respone_msg,
-      total_count: this.total_count,
-      limit: this.limit,
-      page: this.page,
-      data: this.data
+      data: this.data,
+      paging: this.paging,
+      message: this.message
     };
   }
 }

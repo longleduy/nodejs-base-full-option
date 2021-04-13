@@ -5,7 +5,7 @@ import session from 'express-session';
 import Timeout = NodeJS.Timeout;
 import express from 'express';
 //Utils
-import LoggerUtil from "./Logger.util";
+import logger from "./Logger.util";
 //Constants
 import {msgConstant} from "../constants";
 //Errors
@@ -36,13 +36,13 @@ class RedisUtil {
       store: new this.RedisStore({client: this.clientSync }),
       cookie: {}
     });
-    LoggerUtil.logger.info("Redis Session create!");
+    logger.info("Redis Session create!");
   }
 
   public connect() {
     if(process.env.REDIS_CLUSTER as string === "1"){
       const listRedisNode: any[] = JSON.parse(process.env.REDIS_CLUSTER_NODE as string);
-      LoggerUtil.logger.info(listRedisNode);
+      logger.info(listRedisNode);
       this.clientSync = new Redis.Cluster(listRedisNode);
     }
     else{
@@ -52,15 +52,15 @@ class RedisUtil {
         password: process.env.REDIS_PASSWORD
       });
     }
-    LoggerUtil.logger.info(msgConstant.REDIS_CONNECTING);
+    logger.info(msgConstant.REDIS_CONNECTING);
     this.clientSync.on('connect', function () {
-      LoggerUtil.logger.info(msgConstant.REDIS_CONNECTED);
+      logger.info(msgConstant.REDIS_CONNECTED);
     });
     let reconect = 0;
     this.clientSync.on("error", function (err:any) {
       reconect = reconect +1;
-      LoggerUtil.logger.info(reconect);
-      LoggerUtil.logger.error(err.stack);
+      logger.info(reconect);
+      logger.error(err.stack);
     });
   }
   public async redisRequest(...arg: any[]) {
@@ -76,7 +76,7 @@ class RedisUtil {
         try {
           id = setTimeout(
             () => {
-              LoggerUtil.logger.error(`Redis request ${redisAction} ${params.join()} time out!`);
+              logger.error(`Redis request ${redisAction} ${params.join()} time out!`);
               reject(new RequestTimeOutError());
             },
             Number(1)
@@ -92,7 +92,7 @@ class RedisUtil {
     }
     catch(e) {
       if (option.throwError === false) {
-        LoggerUtil.logger.error(e.stack || e);
+        logger.error(e.stack || e);
         return option.defaultResponse
       }
       throw e;

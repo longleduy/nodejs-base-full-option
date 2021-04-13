@@ -1,14 +1,18 @@
-export default class AuthenticationError extends Error{
+interface Option{
+  message?: string
+  error?: Error
+}
+class AuthenticationError extends Error{
   name: string = 'AuthenticationError';
-  message: string;
+  message = 'Permission denied!';
   code: string = 'AUTHENTICATION_ERROR';
-  role: number = 1; // Return msg error to client
+  role: number = 1;
   status: number = 403;
-  stack: string;
-  constructor (err?: Error) {
+  constructor (option?: Option) {
     super();
-    this.message = `Permission denied!`;
-    this.stack = `${this.name}: ${this.message}
-${err?.stack}`;
+    this.message = option?.message || `Permission denied!`;
   }
+}
+export {
+  AuthenticationError
 }

@@ -1,13 +1,13 @@
 import {Pool} from 'pg';
 //Utils
-import LoggerUtil from './Logger.util';
+import logger from './Logger.util';
 //Constans
 import {msgConstant} from '../constants/index';
 import dotenv from 'dotenv';
 
 dotenv.config();
 class PostgresUtil {
-  pool!: Pool;
+  pool: Pool;
   public connect(): void{
     this.pool = new Pool({
       user: process.env.POSTGRES_USER,
@@ -17,15 +17,15 @@ class PostgresUtil {
       port: Number(process.env.POSTGRES_PORT),
     });
     this.pool.connect((err: Error) => {
-      LoggerUtil.logger.info(msgConstant.POSTGRES_CONNECTING);
+      logger.info(msgConstant.POSTGRES_CONNECTING);
       if (err) {
-        LoggerUtil.logger.error(`${msgConstant.POSTGRES_ERROR} ${err}`);
+        logger.error(`${msgConstant.POSTGRES_ERROR} ${err}`);
         setTimeout(() => {
           this.connect();
         },2000)
       }
       else{
-        LoggerUtil.logger.info(msgConstant.POSTGRES_CONNECTED);
+        logger.info(msgConstant.POSTGRES_CONNECTED);
       }
     });
   }

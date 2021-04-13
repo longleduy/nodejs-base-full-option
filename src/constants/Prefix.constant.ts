@@ -1,6 +1,8 @@
-const INDEX = '';
+const USER = '/user';
+const POST = '/post';
 const SEARCH = '/search';
 export default {
-  INDEX,
-  SEARCH
+  USER,
+  SEARCH,
+  POST
 };

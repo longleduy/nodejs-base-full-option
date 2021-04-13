@@ -1,13 +1,11 @@
 # nodejs-base-full-option
 
 - DB:
-  + Redis
-  + Mongo
+  + Redis (caching, )
+  + Mongosession ()
 - Secure:
-  + Hash password
-  + Compare password
-  + JWT generate, verify
+  + JWT
 - Decorator
   + Route
   + Logger
-  + Authenticate (JWT verify middleware) 
+  + Authenticate

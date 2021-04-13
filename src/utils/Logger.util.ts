@@ -1,12 +1,14 @@
 import winston from "winston";
-import WinstonCloudWatch from "winston-cloudwatch";
 import "winston-daily-rotate-file";
 import config from 'config';
+import dotenv from 'dotenv';
 
+dotenv.config();
 class LoggerUtil {
-  logger!: winston.Logger;
+  logger: winston.Logger;
   loggerConfig: any = config.get('logger');
   constructor() {
+    console.log('---------');
     this.init();
   }
   private init():  void{
@@ -36,7 +38,7 @@ class LoggerUtil {
         })
       ]:[]
     });
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' || this.loggerConfig.aws_log_type === 'CLOUDWATCH') {
       this.logger.add(new winston.transports.Console({
         format: combine(
           timestamp(),
@@ -44,17 +46,6 @@ class LoggerUtil {
         ),
       }));
     }
-    else if(this.loggerConfig.aws_log_type === 'CLOUDWATCH'){
-      const cloudwatchConfig = {
-        logGroupName: process.env.CLOUDWATCH_GROUP_NAME,
-        logStreamName: `${process.env.CLOUDWATCH_GROUP_NAME}-${process.env.NODE_ENV}`,
-        awsAccessKeyId: process.env.CLOUDWATCH_ACCESS_KEY,
-        awsSecretKey: process.env.CLOUDWATCH_SECRET_ACCESS_KEY,
-        awsRegion: process.env.CLOUDWATCH_REGION,
-        messageFormatter: (opt: any) => `${opt.level.toUpperCase()}: ${opt.message}`
-      };
-      this.logger.add(new WinstonCloudWatch(cloudwatchConfig))
-    }
   }
 }
-export default new LoggerUtil();
+export default new LoggerUtil().logger;

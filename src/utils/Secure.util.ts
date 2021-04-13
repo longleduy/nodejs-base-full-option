@@ -3,28 +3,29 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import {Request, Response} from 'express';
 //Models
-import Payload from "../models/Payload.model";
-import {ISession} from "../models/ISession.base";
+import {ISession} from "../models/ISession.model";
 //Utils
 import LoggerUtil from './Logger.util';
-import AuthenticationError from "./errors/AuthenticationError.error";
+import {AuthenticationError} from "./errors/AuthenticationError.error";
+import {IPayload} from "../models/IPayload.model";
+import {MyRequest} from "../models/MyRequest.model";
+import {plainToClass} from "class-transformer";
 
 dotenv.config();
 class SecureUtil {
-  public generateToken = (payload: Payload): string => {
+  public generateToken(payload: IPayload): string{
     const payloadObj: object = {...payload};
-    return jwt.sign(payloadObj,process.env.JWT_SECRET_KEY as string,{expiresIn: process.env.JWT_EXPIRE_TIME});
+    return jwt.sign(payloadObj,process.env.JWT_SECRET_KEY as string,{expiresIn: Number(process.env.JWT_EXPIRE_TIME)});
   }
-  public async hashPassWordAsync(password: string): Promise<string>{
-    return  await bcrypt.hash(password, process.env.BCRYPT_SALT_NUMBER || 10);
+  public async hashPassWord(password: string): Promise<string>{
+    return  await bcrypt.hash(password, Number(process.env.BCRYPT_SALT_NUMBER || 10));
   }
-  public async comparePassWordAsync(passWord: string, passWordHashed: string): Promise<boolean>{
+  public async comparePassWord(passWord: string, passWordHashed: string): Promise<boolean>{
     return await bcrypt.compare(passWord, passWordHashed);
   }
-  public async verifyToken(req: Request, res: Response): Promise<void>{
-    const sess = req.session as ISession;
-    // @ts-ignore
-    const token: string = req.headers.authorization || '';
+  public async verifyToken(req: MyRequest, res: Response): Promise<void>{
+    const sess = req.session;
+    const token: string = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : '';
     try {
       const payload: any = await jwt.verify(token, process.env.JWT_SECRET_KEY as string);
       const isAuth: boolean = payload.userName === sess.userName && token === sess.token;
@@ -40,8 +41,9 @@ class SecureUtil {
         if(expTime < 60000 && info.userName === sess.userName && token === sess.token){
           console.log("Token refresh");
           const payload: any = {
+            userId: info.userId,
             userName: info.userName,
-            profileName: info.profileName
+            userRole: info.role
           };
           const newToken: string = await this.generateToken(payload);
           sess.token = newToken;

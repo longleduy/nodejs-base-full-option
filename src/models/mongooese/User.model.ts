@@ -1,13 +1,19 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
+import {UserRoleType} from "../Types.model";
 
 class User {
   @prop({required: true, unique: true})
-  userName?: string;
-  @prop()
-  passWord?: string;
-  @prop()
-  profileName?: string;
+  userName: string;
+  @prop({required: true})
+  passWord: string;
+  @prop({enum: ['MEMBER', 'ADMIN', 'VIP'],default: 'MEMBER'})
+  role?: UserRoleType;
   @prop({default: false})
   active?: boolean;
+
 }
-export const UserModel = getModelForClass(User);
+const UserModel = getModelForClass(User);
+export {
+  UserModel,
+    User
+}
